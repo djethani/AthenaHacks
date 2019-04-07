@@ -22,7 +22,7 @@ import MainNavigator from './MainComponent';
                               }))    
                         }}
                         title="START"
-                        color="#ffffff"
+                        color="black"
                     />
     			</View>
     		</View>
@@ -69,12 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   overlayContainer: {
-  	backgroundColor: 'rgba(47,163,218, .3)'
-  },
-  top: {
-  	height:'60%',
-  	alignItems: 'center',
-  	justifyContent: 'center',
+    height:'%',
   },
   header: {
   	color: '#fff',
@@ -87,9 +82,8 @@ const styles = StyleSheet.create({
   	backgroundColor: 'rgba(255,255,255, .1)',
   },
   menuContainer: {
-  	height: '40%',
-  	flexDirection: 'row',
-    flexWrap: 'wrap',
+  	height: 550,
+
   	justifyContent: 'center'
   }
 });
