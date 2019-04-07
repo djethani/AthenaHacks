@@ -64,12 +64,11 @@ export default Start;
 
 const styles = StyleSheet.create({  
 	container: {
-		flex: 1,
 		width: '100%',
 		height: '100%',
+    justifyContent: 'center',
   },
   overlayContainer: {
-  	flex:1,
   	backgroundColor: 'rgba(47,163,218, .3)'
   },
   top: {

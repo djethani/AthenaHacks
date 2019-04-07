@@ -5,8 +5,11 @@ import {
 	Text,
 	Button,
 	TouchableOpacity,
-	Modal
+	Modal,
+	ScrollView,
+	Linking,
 } from 'react-native';
+import { Card } from 'react-native-elements';
 
 import qs from 'qs';
 import {MapView} from 'expo';
@@ -45,10 +48,11 @@ class Home extends Component {
 			url: null,
 			modalVisible: false,
 			modalVisible2: false,
-			booths: []
+			booths: [],
+			charityData: [],
 		};
 		this.handleCalloutPress = this.handleCalloutPress.bind(this);
-		this.forceUpdate()
+		this.fetchCharities = this.fetchCharities.bind(this);
 		//this.fetchLyftMapAPI = this.fetchLyftMapAPI.bind(this);
 	}
 
@@ -77,7 +81,6 @@ class Home extends Component {
 		})
 	    	.then((data) => data.json())
 	      	.then(res => {
-	        	console.log(res);
 	        	this.setState({rideInfo: {
 	        		cost: Math.floor(res.cost_estimates[0].estimated_cost_cents_max/100),
 	        		distance: res.cost_estimates[0].estimated_distance_miles,
@@ -106,11 +109,9 @@ class Home extends Component {
 		  	const boothCoords = [];
 		  	let data = snapshot.val();
 		    let keys = Object.keys(data);
-		    console.log('KEYS', keys);
 		    keys.forEach((key) => {	
 		    	let addressCoords = Object.keys(data[key]);
 		    	addressCoords.forEach((key2) => {	
-		    		console.log(key2);
 		    		let val = data[key][key2];
 		    		boothCoords.push({coordinate: {latitude: val['lat'], longitude: val['long']}, 
 		    							troopNumber: val['troopNumber'], troopName: val['troopName'], supportedCharities: val['supportedCharities'],
@@ -119,7 +120,6 @@ class Home extends Component {
 		    });
 
 		  	this.setState({ booths: boothCoords });
-		  	console.log(this.state.booths);
 		});
   	}
 
@@ -128,10 +128,33 @@ class Home extends Component {
   	}
 
   	handleCalloutPress(booth){
+  		//console.log("BOOTH", booth);
   		this.setState({modalVisible: true, selectedBooth: {troopNumber: booth.troopNumber, supportedCharities: booth.supportedCharities, troopName: booth.troopName, samoas: booth.samoas, thinMints:booth.thinMints, shortbreads: booth.shortbreads}});
+  		console.log("BOOTH!!!!!!", booth.supportedCharities);
   		this.fetchLyftMapAPI(booth);
+
   	}
 
+  	fetchCharities() {
+  		const apiKey = '1775fea3bac07a4a53af179faca041a8';
+  		const supportedCharities = this.state.selectedBooth.supportedCharities;
+  		const charityURL = encodeURIComponent(supportedCharities.split(','));
+  		console.log('FETCHING CHARITIES!!!!', this.state.selectedBooth);
+
+  		const url = `http://data.orghunter.com/v1/charitysearch?user_key=${apiKey}&searchTerm=${charityURL}`;
+  		fetch(url)
+  		.then((data) => data.json())
+  		.then(res => {
+  				const charities = [];
+  				let charityData = res.data;
+  				charityData.forEach((charity) => {
+  					charities.push({name: charity.charityName, donationUrl: charity.donationUrl, url: charity.url});
+  				});
+  				this.setState({charityData: charities});
+  				console.log('!!!!!!!!!<><>', this.state.charityData);
+	        })
+
+  	}
   	onPress = () => {
   		this.setState({modalVisible: false, modalVisible2: true});
   	}
@@ -183,9 +206,31 @@ class Home extends Component {
 				        		<Text>Thin Mints: {this.state.selectedBooth.thinMints}</Text>
 				        		<Text>Shortbreads: {this.state.selectedBooth.shortbreads}</Text>
 				        	</View>
+				        	<View style={{height: 100}}>
+				        	</View>
+				        	<Text>Support {this.state.selectedBooth.troopName} charities</Text>
+				        	<Button onPress={this.fetchCharities}
+								  title="CharityDetails"
+								  color="#841584" />
+
 				        	<Button onPress={this.onPress}
 								  title="Checkout"
 								  color="#841584" />
+							<ScrollView>
+							{this.state.charityData.map((charity, index) => {
+								let name = charity.name;
+								let url = charity.url;
+								let donationUrl = charity.donationUrl;
+			                    return (
+			                        <Card key={index} title={name}>
+			                            <Text><Text style={{fontWeight: "bold"}}> Charity Name: </Text>{name}</Text>
+			                            <Text><Text style={{fontWeight: "bold"}} onPress={()=>{Linking.openURL(url)}}> Charity URL: </Text>{url}</Text>
+			                            <Text><Text style={{fontWeight: "bold"}} onPress={()=>{Linking.openURL(donationUrl)}}> Donation URL: </Text>{donationUrl}</Text>
+			                        </Card>
+			                    );
+							})}
+							</ScrollView>
+	  
 				        </Modal>
 
 				      	<Modal
