@@ -3,8 +3,8 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": "https://9s-wct.anonymous.girlscouts.exp.direct",
-  "packagerNgrokUrl": "https://packager.9s-wct.anonymous.girlscouts.exp.direct",
-  "ngrokPid": 2384,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null
 }

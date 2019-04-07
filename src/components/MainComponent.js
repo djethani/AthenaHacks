@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Home from './HomeComponent';
+import Address from './AddressComponent';
+import CommunityForum from './CommunityForumComponent';
 import { StyleSheet, ImageBackground, Button, View, Text } from 'react-native';
 import { createStackNavigator, createDrawerNavigator} from 'react-navigation';
 import { Icon } from 'react-native-elements';
@@ -20,8 +22,42 @@ const HomeNavigator = createStackNavigator({
         color= 'white'
         onPress={ () => navigation.toggleDrawer() } />     
     })
+  });
+
+
+const AddressNavigator = createStackNavigator({
+    Address: { screen: Address }
+  }, {
+    defaultNavigationOptions: ({ navigation }) => ({
+      headerStyle: {
+          backgroundColor: "#006400"
+      },
+      headerTitleStyle: {
+          color: "#fff"            
+      },
+      headerTintColor: "#fff",
+      headerLeft: <Icon name="menu" size={24}
+        color= 'white'
+        onPress={ () => navigation.toggleDrawer() } />  
+    })
 });
 
+const CommunityForumNavigator = createStackNavigator({
+    CommunityForum: { screen: CommunityForum },
+  }, {
+    defaultNavigationOptions: ({ navigation }) => ({
+      headerStyle: {
+          backgroundColor: "#006400"
+      },
+      headerTitleStyle: {
+          color: "#fff"            
+      },
+      headerTintColor: "#fff",
+      headerLeft: <Icon name="menu" size={24}
+        color= 'white'
+        onPress={ () => navigation.toggleDrawer() } />     
+    })
+  });
 
 export default MainNavigator = createDrawerNavigator({
     Home: 
@@ -38,7 +74,36 @@ export default MainNavigator = createDrawerNavigator({
             />
           ),
         }
+      }, 
+    Address: { screen: AddressNavigator,
+        navigationOptions: {
+          title: 'Add New Booth',
+          drawerLabel: 'Add',
+          drawerIcon: ({ tintColor, focused }) => (
+            <Icon
+              name='plus'
+              type='font-awesome'            
+              size={24}
+              color={tintColor}
+            />
+          ),
+        }
       },
-}, {
+    CommunityForum: { screen: CommunityForumNavigator,
+      navigationOptions: {
+        title: 'Community Forum',
+        drawerLabel: 'Community Forum',
+        drawerIcon: ({ tintColor, focused }) => (
+          <Icon
+            name='address-card'
+            type='font-awesome'            
+            size={24}
+            color={tintColor}
+          />
+        ),
+      }
+    },
+},     
+{
   drawerBackgroundColor: '#006400'
 });

@@ -11,7 +11,6 @@ import MainNavigator from './MainComponent';
     		style={styles.container}>
 
     		<View style={styles.overlayContainer}>
-
     			<View style={styles.menuContainer}>
                     <Button 
                         onPress={() => {
